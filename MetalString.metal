@@ -2,22 +2,30 @@
 
 #include <metal_stdlib>
 
+#define MAX_STRING_SIZE 100
+#define MAX_STRING_DISK_SIZE (MAX_STRING_SIZE + 1) // For null terminator
 
 using namespace metal;
 
 
-int stoi(const char str[100]);
-long stol(const char str[100]);
-unsigned int stoul(const char str[100]);
-float stof(const char str[100]);
+int stoi(const char str[MAX_STRING_DISK_SIZE]);
+long stol(const char str[MAX_STRING_DISK_SIZE]);
+unsigned int stoul(const char str[MAX_STRING_DISK_SIZE]);
+float stof(const char str[MAX_STRING_DISK_SIZE]);
 
-int length(const char str[100]);
-int size(const char str[100]);
-
+size_t length(const char str[MAX_STRING_DISK_SIZE]);
+size_t size(const char str[MAX_STRING_DISK_SIZE]);
+size_t max_size(const char str[MAX_STRING_DISK_SIZE]);
+//// To implement       void resize (size_t n);void resize (size_t n, char c);
+//// To implement       size_t capacity();
+//// To implement       void reserve (size_t n = 0);
+void clear(char str[MAX_STRING_SIZE]);
+bool empty(const char str[MAX_STRING_SIZE]);
+//// To implement       void shrink_to_fit();
 
 
 // Convert string to int
-int stoi(const char str[100]) {
+int stoi(const char str[MAX_STRING_DISK_SIZE]) {
     int res = 0; // Initialize result
     int sign = 1; // Initialize sign as positive
     int i = 0; // Initialize index of first digit
@@ -39,7 +47,7 @@ int stoi(const char str[100]) {
 
 
 // Convert string to long int
-long stol(const char str[100]) {
+long stol(const char str[MAX_STRING_DISK_SIZE]) {
     long res = 0;
     int sign = 1;
     int i = 0;
@@ -61,7 +69,7 @@ long stol(const char str[100]) {
 
 
 // Convert string to unsigned int
-unsigned int stoul(const char str[100]) {
+unsigned int stoul(const char str[MAX_STRING_DISK_SIZE]) {
     unsigned int res = 0;
     int i = 0;
 
@@ -74,7 +82,7 @@ unsigned int stoul(const char str[100]) {
 
 
 // Convert string to float
-float stof(const char str[100]) {
+float stof(const char str[MAX_STRING_DISK_SIZE]) {
     float res = 0.0; // Initialize result
     float factor = 1.0;
     int sign = 1; // Initialize sign as positive
@@ -106,8 +114,8 @@ float stof(const char str[100]) {
 
 
 // Function to calculate the length of the string
-int length(const char str[100]) {
-    int len = 0;
+size_t length(const char str[MAX_STRING_DISK_SIZE]) {
+    size_t len = 0;
     while (str[len] != '\0') {
         len++;
     }
@@ -117,6 +125,29 @@ int length(const char str[100]) {
 
 
 // Function to calculate the size of the string, using the length() function
-int size(const char str[100]) {
+size_t size(const char str[MAX_STRING_DISK_SIZE]) {
     return length(str);
+}
+
+
+
+// Function to return the maximum size of the string
+size_t max_size(const char str[MAX_STRING_DISK_SIZE]) {
+    return MAX_STRING_SIZE;
+}
+
+
+
+// Function to clear the contents of the string
+void clear(char str[MAX_STRING_SIZE]) {
+    for (size_t i = 0; i < MAX_STRING_SIZE; ++i) {
+        str[i] = '\0';
+    }
+}
+
+
+
+// Function to check if the string is empty
+bool empty(const char str[MAX_STRING_SIZE]) {
+    return str[0] == '\0';
 }
