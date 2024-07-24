@@ -19,9 +19,16 @@ size_t max_size(const char str[MAX_STRING_DISK_SIZE]);
 //// To implement       void resize (size_t n);void resize (size_t n, char c);
 //// To implement       size_t capacity();
 //// To implement       void reserve (size_t n = 0);
-void clear(char str[MAX_STRING_SIZE]);
-bool empty(const char str[MAX_STRING_SIZE]);
+void clear(char str[MAX_STRING_DISK_SIZE]);
+bool empty(const char str[MAX_STRING_DISK_SIZE]);
 //// To implement       void shrink_to_fit();
+
+//// To implement        char& operator[] (size_t pos);const char& operator[] (size_t pos) const;
+// Note these return constants rather than C++ which returns references
+char at(char str[MAX_STRING_DISK_SIZE], size_t pos);
+char back(const char str[MAX_STRING_DISK_SIZE]);
+char front(const char str[MAX_STRING_DISK_SIZE]);
+
 
 
 // Convert string to int
@@ -150,4 +157,37 @@ void clear(char str[MAX_STRING_SIZE]) {
 // Function to check if the string is empty
 bool empty(const char str[MAX_STRING_SIZE]) {
     return str[0] == '\0';
+}
+
+
+
+// Returns character at position pos
+// Note C++ returns reference usually
+char at(const char str[MAX_STRING_SIZE], size_t pos) {
+    assert(pos < MAX_STRING_SIZE);
+    return str[pos];
+}
+
+
+
+// Returns last character
+// Note C++ returns reference usually
+char back(const char str[MAX_STRING_DISK_SIZE]) {
+    // Iterate to find the last character before the null terminator
+    size_t i = 0;
+    while (i < MAX_STRING_SIZE && str[i] != '\0') {
+        i++;
+    }
+
+    assert(i > 0); // Ensure the string is not empty
+    return str[i - 1];
+}
+
+
+
+// Returns first character
+// Note C++ returns reference usually
+char front(const char str[MAX_STRING_DISK_SIZE]) {
+    assert(!empty(str)); // Ensure the string is not empty
+    return str[0];
 }

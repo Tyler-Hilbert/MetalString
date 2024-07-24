@@ -12,6 +12,12 @@ size_t max_size(const char str[MAX_STRING_DISK_SIZE]);
 //// To implement       void resize (size_t n);void resize (size_t n, char c);  
 //// To implement       size_t capacity();  
 //// To implement       void reserve (size_t n = 0);  
-void clear(char str[MAX_STRING_SIZE]);  
-bool empty(const char str[MAX_STRING_SIZE]);  
+void clear(char str[MAX_STRING_DISK_SIZE]);  
+bool empty(const char str[MAX_STRING_DISK_SIZE]);  
 //// To implement       void shrink_to_fit();  
+
+//// To implement        char& operator[] (size_t pos);const char& operator[] (size_t pos) const;  
+// Note these return constants rather than C++ which returns references  
+char at(char str[MAX_STRING_DISK_SIZE], size_t pos);  
+char back(const char str[MAX_STRING_DISK_SIZE]);  
+char front(const char str[MAX_STRING_DISK_SIZE]);  
