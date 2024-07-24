@@ -21,3 +21,6 @@ bool empty(const char str[MAX_STRING_DISK_SIZE]);
 char at(char str[MAX_STRING_DISK_SIZE], size_t pos);  
 char back(const char str[MAX_STRING_DISK_SIZE]);  
 char front(const char str[MAX_STRING_DISK_SIZE]);  
+
+### Reference  
+https://cplusplus.com/reference/string/string/

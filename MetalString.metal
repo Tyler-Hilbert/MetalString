@@ -1,4 +1,5 @@
-// Experimental String class functions on GPU using Metal
+// Experimental String class functions (uses C++ definitinos) on GPU using Metal
+// https://cplusplus.com/reference/string/string/
 
 #include <metal_stdlib>
 
@@ -28,6 +29,9 @@ bool empty(const char str[MAX_STRING_DISK_SIZE]);
 char at(char str[MAX_STRING_DISK_SIZE], size_t pos);
 char back(const char str[MAX_STRING_DISK_SIZE]);
 char front(const char str[MAX_STRING_DISK_SIZE]);
+
+//// To implement       string& operator+= (const string& str); string& operator+= (const char* s); string& operator+= (char c); string& operator+= (initializer_list<char> il);
+
 
 
 
