@@ -22,5 +22,14 @@ char at(char str[MAX_STRING_DISK_SIZE], size_t pos);
 char back(const char str[MAX_STRING_DISK_SIZE]);  
 char front(const char str[MAX_STRING_DISK_SIZE]);  
 
+//// To implement       string& operator+= (const string& str); string& operator+= (const char* s); string& operator+= (char c); string& operator+= (initializer_list<char> il);  
+void append(char first[MAX_STRING_DISK_SIZE], const char second[MAX_STRING_DISK_SIZE]);  
+void push_back(char str[MAX_STRING_DISK_SIZE], char c);  
+void assign(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE]);  
+void assign(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE], size_t subpos, size_t sublen);  
+void assign(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE], size_t sublen);  
+void assign(char str[MAX_STRING_DISK_SIZE], size_t n, char c);  
+
+
 ### Reference  
 https://cplusplus.com/reference/string/string/
