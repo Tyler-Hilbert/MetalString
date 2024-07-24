@@ -142,7 +142,7 @@ size_t size(const char str[MAX_STRING_DISK_SIZE]) {
 
 
 
-// Function to return the maximum size of the string
+// Function to return the maximum size of the string not including null terminator
 size_t max_size(const char str[MAX_STRING_DISK_SIZE]) {
     return MAX_STRING_SIZE;
 }
@@ -150,8 +150,8 @@ size_t max_size(const char str[MAX_STRING_DISK_SIZE]) {
 
 
 // Function to clear the contents of the string
-void clear(char str[MAX_STRING_SIZE]) {
-    for (size_t i = 0; i < MAX_STRING_SIZE; ++i) {
+void clear(char str[MAX_STRING_DISK_SIZE]) {
+    for (size_t i = 0; i < MAX_STRING_DISK_SIZE; ++i) {
         str[i] = '\0';
     }
 }
@@ -159,7 +159,7 @@ void clear(char str[MAX_STRING_SIZE]) {
 
 
 // Function to check if the string is empty
-bool empty(const char str[MAX_STRING_SIZE]) {
+bool empty(const char str[MAX_STRING_DISK_SIZE]) {
     return str[0] == '\0';
 }
 
@@ -167,7 +167,7 @@ bool empty(const char str[MAX_STRING_SIZE]) {
 
 // Returns character at position pos
 // Note C++ returns reference usually
-char at(const char str[MAX_STRING_SIZE], size_t pos) {
+char at(const char str[MAX_STRING_DISK_SIZE], size_t pos) {
     assert(pos < MAX_STRING_SIZE);
     return str[pos];
 }
@@ -179,7 +179,7 @@ char at(const char str[MAX_STRING_SIZE], size_t pos) {
 char back(const char str[MAX_STRING_DISK_SIZE]) {
     // Iterate to find the last character before the null terminator
     size_t i = 0;
-    while (i < MAX_STRING_SIZE && str[i] != '\0') {
+    while (i < MAX_STRING_DISK_SIZE && str[i] != '\0') {
         i++;
     }
 
