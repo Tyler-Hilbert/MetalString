@@ -11,6 +11,9 @@ long stol(const char str[100]);
 unsigned int stoul(const char str[100]);
 float stof(const char str[100]);
 
+int length(const char str[100]);
+int size(const char str[100]);
+
 
 
 // Convert string to int
@@ -98,4 +101,22 @@ float stof(const char str[100]) {
 
     // Return result with sign
     return sign * res;
+}
+
+
+
+// Function to calculate the length of the string
+int length(const char str[100]) {
+    int len = 0;
+    while (str[len] != '\0') {
+        len++;
+    }
+    return len;
+}
+
+
+
+// Function to calculate the size of the string, using the length() function
+int size(const char str[100]) {
+    return length(str);
 }
