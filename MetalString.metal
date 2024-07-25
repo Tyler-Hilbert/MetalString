@@ -1,5 +1,6 @@
-// Experimental String class functions (uses C++ definitinos) on GPU using Metal
-// https://cplusplus.com/reference/string/string/
+// String class functions (uses C++ definitinos) on GPU using Metal
+// Reference: https://cplusplus.com/reference/string/string/
+// Created by Tyler Hilbert, TYHSoftware@gmail.com      July 2024
 
 #include <metal_stdlib>
 
@@ -23,12 +24,12 @@ size_t max_size(const char str[MAX_STRING_DISK_SIZE]);
 //// To implement       size_t capacity();
 //// To implement       void reserve (size_t n = 0);
 void clear(char str[MAX_STRING_DISK_SIZE]);
-bool empty(const char str[MAX_STRING_DISK_SIZE]);
+bool empty(char str[MAX_STRING_DISK_SIZE]);
 //// To implement       void shrink_to_fit();
 
 //// To implement        char& operator[] (size_t pos);const char& operator[] (size_t pos) const;
 // Note these return constants rather than C++ which returns references
-char at(char str[MAX_STRING_DISK_SIZE], size_t pos);
+char at(const char str[MAX_STRING_DISK_SIZE], size_t pos);
 char back(const char str[MAX_STRING_DISK_SIZE]);
 char front(const char str[MAX_STRING_DISK_SIZE]);
 
@@ -51,8 +52,41 @@ void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, char c);
 void swap(char swap1[MAX_STRING_DISK_SIZE], char swap2[MAX_STRING_DISK_SIZE]);
 void pop_back(char str[MAX_STRING_DISK_SIZE]);
 
+//// To implement       const char* c_str() const noexcept;
+//// To implement       const char* data() const noexcept;
+//// To implement       allocator_type get_allocator() const noexcept;
+void copy(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE], size_t len, size_t pos);
+size_t find(const char full_str[MAX_STRING_DISK_SIZE], const char search_substr[MAX_STRING_DISK_SIZE]);
+size_t find(const char full_str[MAX_STRING_DISK_SIZE], const char search_substr[MAX_STRING_DISK_SIZE], size_t pos);
+size_t find(const char str[MAX_STRING_DISK_SIZE], char c);
+size_t find(const char str[MAX_STRING_DISK_SIZE], char c, size_t pos);
+size_t rfind(const char full_str[MAX_STRING_DISK_SIZE], const char search_substr[MAX_STRING_DISK_SIZE]);
+size_t rfind(const char full_str[MAX_STRING_DISK_SIZE], const char search_substr[MAX_STRING_DISK_SIZE], size_t pos);
+size_t rfind(const char str[MAX_STRING_DISK_SIZE], char c);
+size_t rfind(const char str[MAX_STRING_DISK_SIZE], char c, size_t pos);
+size_t find_first_of (const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE]);
+size_t find_first_of (const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE], size_t pos);
+size_t find_first_of (const char str[MAX_STRING_DISK_SIZE], char c);
+size_t find_first_of (const char str[MAX_STRING_DISK_SIZE], char c, size_t pos);
+size_t find_last_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE]);
+size_t find_last_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE], size_t pos);
+size_t find_last_of(const char str[MAX_STRING_DISK_SIZE], char c);
+size_t find_last_of(const char str[MAX_STRING_DISK_SIZE], char c, size_t pos);
+size_t find_first_not_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE]);
+size_t find_first_not_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE], size_t pos);
+size_t find_first_not_of(const char str[MAX_STRING_DISK_SIZE], const char c);
+size_t find_first_not_of(const char str[MAX_STRING_DISK_SIZE], const char c, size_t pos);
+size_t find_last_not_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE]);
+size_t find_last_not_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE], size_t pos);
+size_t find_last_not_of(const char str[MAX_STRING_DISK_SIZE], char c);
+size_t find_last_not_of(const char str[MAX_STRING_DISK_SIZE], char c, size_t pos);
+void substr(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE], size_t pos, size_t len);
+int compare(const char str[MAX_STRING_DISK_SIZE], const char compare_str[MAX_STRING_DISK_SIZE]);
+int compare(const char str[MAX_STRING_DISK_SIZE], size_t compare_str_pos, size_t compare_str_len, const char compare_str[MAX_STRING_DISK_SIZE]);
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Convert string to int
 int stoi(const char str[MAX_STRING_DISK_SIZE]) {
@@ -181,7 +215,7 @@ void clear(char str[MAX_STRING_DISK_SIZE]) {
 
 
 // Function to check if the string is empty
-bool empty(const char str[MAX_STRING_DISK_SIZE]) {
+bool empty(char str[MAX_STRING_DISK_SIZE]) {
     return str[0] == '\0';
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -361,7 +395,6 @@ void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, const char src[MAX_STRI
 // Inserts a copy of the first n characters of src into dest at pos.
 void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, const char src[MAX_STRING_DISK_SIZE], size_t sublen) {
     size_t dest_length = length(dest);
-    size_t src_length = length(src);
     assert(pos <= dest_length); // Ensure pos is within the destination string
     assert(sublen <= src_length); // Ensure sublen is within the source string
 
@@ -437,7 +470,6 @@ void erase(char str[MAX_STRING_DISK_SIZE], size_t pos, size_t len) {
 // Replace len characters starting at pos with the string src
 void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, const char src[MAX_STRING_DISK_SIZE]) {
     size_t dest_length = length(dest);
-    size_t src_length = length(src);
     assert(pos <= dest_length); // Ensure pos is within the string
     assert(pos + len <= src_length); // Ensure the replacement doesn't exceed src
 
@@ -563,5 +595,478 @@ void pop_back(char str[MAX_STRING_DISK_SIZE]) {
     size_t len = length(str);
     if (len > 0) {
         str[len - 1] = '\0'; // Remove the last character by setting it to null terminator
+    }
+}
+
+
+
+// Copy sequence of characters from src to dest
+void copy(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE], size_t len, size_t pos) {
+    size_t src_length = length(src);
+    assert(pos <= src_length); // Ensure pos is within the string
+
+    // Adjust len if it exceeds the length of the source string
+    if (pos + len > src_length) {
+        len = src_length - pos;
+    }
+
+    // Copy characters from src to dest
+    for (size_t i = 0; i < len; ++i) {
+        dest[i] = src[pos + i];
+    }
+}
+
+
+
+// Searches for search_substr in full_str
+size_t find(const char full_str[MAX_STRING_DISK_SIZE], const char search_substr[MAX_STRING_DISK_SIZE]) {
+    return find (full_str, search_substr, 0);
+}
+
+
+
+// Searches for search_substr in full_str starting at index pos
+size_t find(const char full_str[MAX_STRING_DISK_SIZE], const char search_substr[MAX_STRING_DISK_SIZE], size_t pos) {
+    size_t full_str_length = length(full_str);
+    size_t search_substr_length = length(search_substr);
+
+    if (pos > full_str_length) {
+        return NPOS; // If pos is greater than the length of full_str, return NPOS
+    }
+
+    for (size_t i = pos; i <= full_str_length - search_substr_length; ++i) {
+        bool match = true;
+        for (size_t j = 0; j < search_substr_length; ++j) {
+            if (full_str[i + j] != search_substr[j]) {
+                match = false;
+                break;
+            }
+        }
+        if (match) {
+            return i; // Return the position of the first match
+        }
+    }
+
+    return NPOS; // No match found
+}
+
+
+
+// Searches for c in str
+size_t find(const char str[MAX_STRING_DISK_SIZE], char c) {
+    return find (str, c, 0);
+}
+
+
+
+// Searches for c in str starting at index pos
+size_t find(const char str[MAX_STRING_DISK_SIZE], char c, size_t pos) {
+    size_t str_length = length(str);
+
+    // If pos is greater than the length of str, return NPOS
+    if (pos >= str_length) {
+        return NPOS;
+    }
+
+    // Iterate through str starting at pos
+    for (size_t i = pos; i < str_length; ++i) {
+        if (str[i] == c) {
+            return i; // Return the position of the first occurrence of c
+        }
+    }
+
+    return NPOS; // No match found
+}
+
+
+
+// Searches for last occurrence of search_substr in full_str
+size_t rfind(const char full_str[MAX_STRING_DISK_SIZE], const char search_substr[MAX_STRING_DISK_SIZE]) {
+    return rfind(full_str, search_substr, 0);
+}
+
+
+
+// Searches for last occurrence of search_substr in full_str starting at index pos
+size_t rfind(const char full_str[MAX_STRING_DISK_SIZE], const char search_substr[MAX_STRING_DISK_SIZE], size_t pos) {
+    size_t full_str_length = length(full_str);
+    size_t search_substr_length = length(search_substr);
+
+    // If pos is greater than or equal to the length of full_str, search the entire string
+    if (pos >= full_str_length) {
+        pos = full_str_length - 1;
+    }
+
+    // If the search_substr is longer than full_str or pos is invalid, return NPOS
+    if (search_substr_length > full_str_length || pos == NPOS) {
+        return NPOS;
+    }
+
+    for (size_t i = pos + 1; i >= search_substr_length; --i) {
+        bool match = true;
+        for (size_t j = 0; j < search_substr_length; ++j) {
+            if (full_str[i - search_substr_length + j] != search_substr[j]) {
+                match = false;
+                break;
+            }
+        }
+        if (match) {
+            return i - search_substr_length;
+        }
+    }
+
+    return NPOS; // No match found
+}
+
+
+
+// Searches for last occurrence of char c in str
+size_t rfind(const char str[MAX_STRING_DISK_SIZE], char c) {
+    return rfind(str, c, 0);
+}
+
+
+
+// Searches for last occurrence of char c in str starting at index pos
+size_t rfind(const char str[MAX_STRING_DISK_SIZE], char c, size_t pos) {
+    size_t str_length = length(str);
+
+    // If pos is greater than the length of str, set pos to the last index
+    if (pos >= str_length) {
+        pos = str_length - 1;
+    }
+
+    // Iterate backwards through str starting at pos
+    for (size_t i = pos + 1; i > 0; --i) {
+        if (str[i - 1] == c) {
+            return i - 1; // Return the position of the last occurrence of c
+        }
+    }
+
+    return NPOS; // No match found
+}
+
+
+
+// Searches str for the first character that matches ANY of chars
+size_t find_first_of (const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE]) {
+    return find_first_of(str, chars, 0);
+}
+
+
+
+// Searches str for the first character that matches any of chars starting at str index pos
+size_t find_first_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE], size_t pos) {
+    size_t str_length = length(str);
+    size_t chars_length = length(chars);
+
+    // If pos is greater than the length of str, return NPOS
+    if (pos >= str_length) {
+        return NPOS;
+    }
+
+    // Iterate through str starting at pos
+    for (size_t i = pos; i < str_length; ++i) {
+        // Check if str[i] matches any character in chars
+        for (size_t j = 0; j < chars_length; ++j) {
+            if (str[i] == chars[j]) {
+                return i; // Return the position of the first match
+            }
+        }
+    }
+
+    return NPOS; // No match found
+}
+
+
+
+// Searches for first instance of c in str
+size_t find_first_of (const char str[MAX_STRING_DISK_SIZE], char c) {
+    return find_first_of(str, c, 0);
+}
+
+
+
+// Searches for first instance of c in str starting at index pos
+size_t find_first_of (const char str[MAX_STRING_DISK_SIZE], char c, size_t pos) {
+    return find(str, c, pos);
+}
+
+
+
+// Searches str for the last character that matches any of the characters in chars starting at str index pos
+size_t find_last_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE]) {
+    return find_last_of(str, chars, 0);
+}
+
+
+
+// Searches str for the last character that matches any of the characters in chars starting at str index pos
+size_t find_last_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE], size_t pos) {
+    size_t str_length = length(str);
+    size_t chars_length = length(chars);
+
+    // If pos is greater than or equal to the length of str, set pos to the last valid index
+    if (pos >= str_length) {
+        pos = str_length - 1;
+    }
+
+    // Iterate backwards through str starting at pos
+    for (size_t i = pos + 1; i > 0; --i) {
+        // Check if str[i-1] matches any character in chars
+        for (size_t j = 0; j < chars_length; ++j) {
+            if (str[i - 1] == chars[j]) {
+                return i - 1; // Return the position of the last match
+            }
+        }
+    }
+
+    return NPOS; // No match found
+}
+
+
+
+// Searches str for the last character that matches character c starting at str index pos
+size_t find_last_of(const char str[MAX_STRING_DISK_SIZE], char c) {
+    return find_last_of(str, c, 0);
+}
+
+
+
+// Searches str for the last character that matches character c starting at str index pos
+size_t find_last_of(const char str[MAX_STRING_DISK_SIZE], char c, size_t pos) {
+    size_t str_length = length(str);
+
+    // If pos is greater than or equal to the length of str, set pos to the last valid index
+    if (pos >= str_length) {
+        pos = str_length - 1;
+    }
+
+    // Iterate backwards through str starting at pos
+    for (size_t i = pos + 1; i > 0; --i) {
+        if (str[i - 1] == c) {
+            return i - 1; // Return the position of the last match
+        }
+    }
+
+    return NPOS; // No match found
+}
+
+
+
+// Searches str for the first character that does not match any of the characters in chars
+size_t find_first_not_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE]) {
+    return find_first_not_of(str, chars, 0);
+}
+
+
+
+// Searches str for the first character that does not match any of the characters in chars starting at str index pos
+size_t find_first_not_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE], size_t pos) {
+    size_t str_length = length(str);
+    size_t chars_length = length(chars);
+
+    // If pos is greater than or equal to the length of str, return NPOS
+    if (pos >= str_length) {
+        return NPOS;
+    }
+
+    // Iterate through str starting at pos
+    for (size_t i = pos; i < str_length; ++i) {
+        bool match = false;
+        // Check if str[i] matches any character in chars
+        for (size_t j = 0; j < chars_length; ++j) {
+            if (str[i] == chars[j]) {
+                match = true;
+                break;
+            }
+        }
+        if (!match) {
+            return i; // Return the position of the first character that does not match
+        }
+    }
+
+    return NPOS; // No such character found
+}
+
+
+
+// Searches str for first character that isn't c
+size_t find_first_not_of(const char str[MAX_STRING_DISK_SIZE], const char c) {
+    return find_first_not_of(str, c, 0);
+}
+
+
+
+// Searches str for first character that isn't c starting at index pos
+size_t find_first_not_of(const char str[MAX_STRING_DISK_SIZE], const char c, size_t pos) {
+    size_t str_length = length(str);
+
+    // If pos is greater than or equal to the length of str, return NPOS
+    if (pos >= str_length) {
+        return NPOS;
+    }
+
+    // Iterate through str starting at pos
+    for (size_t i = pos; i < str_length; ++i) {
+        if (str[i] != c) {
+            return i; // Return the position of the first character that is not c
+        }
+    }
+
+    return NPOS; // No such character found
+}
+
+
+
+// Searches str for the last character that does not match any of the characters in chars starting at str index pos
+size_t find_last_not_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE]) {
+    return find_last_not_of(str, chars, 0);
+}
+
+
+
+// Searches str for the last character that does not match any of the characters in chars starting at str index pos
+size_t find_last_not_of(const char str[MAX_STRING_DISK_SIZE], const char chars[MAX_STRING_DISK_SIZE], size_t pos) {
+    size_t str_length = length(str);
+    size_t chars_length = length(chars);
+
+    // If pos is greater than or equal to the length of str, set pos to the last valid index
+    if (pos >= str_length) {
+        pos = str_length - 1;
+    }
+
+    // Iterate backwards through str starting at pos
+    for (size_t i = pos + 1; i > 0; --i) {
+        bool match = false;
+        // Check if str[i-1] matches any character in chars
+        for (size_t j = 0; j < chars_length; ++j) {
+            if (str[i - 1] == chars[j]) {
+                match = true;
+                break;
+            }
+        }
+        if (!match) {
+            return i - 1; // Return the position of the last character that does not match
+        }
+    }
+
+    return NPOS; // No such character found
+}
+
+
+
+// Searches str for the last character that isn't character c
+size_t find_last_not_of(const char str[MAX_STRING_DISK_SIZE], char c) {
+    return find_last_not_of(str, c, 0);
+}
+
+
+
+// Searches str for the last character that isn't character c starting at str index pos
+size_t find_last_not_of(const char str[MAX_STRING_DISK_SIZE], char c, size_t pos) {
+    size_t str_length = length(str);
+
+    // If pos is greater than or equal to the length of str, set pos to the last valid index
+    if (pos >= str_length) {
+        pos = str_length - 1;
+    }
+
+    // Iterate backwards through str starting at pos
+    for (size_t i = pos + 1; i > 0; --i) {
+        if (str[i - 1] != c) {
+            return i - 1; // Return the position of the last character that is not c
+        }
+    }
+
+    return NPOS; // No such character found
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+// Creates substring of src in dest starting at pos of length len
+// Note: Didn't implement all permutations of the optional arguments
+void substr(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE], size_t pos, size_t len) {
+    size_t src_length = length(src);
+
+    // If pos is greater than or equal to the length of src, set dest to an empty string
+    if (pos >= src_length) {
+        dest[0] = '\0';
+        return;
+    }
+
+    // Adjust len if it exceeds the length of the source string
+    if (len == NPOS || pos + len > src_length) {
+        len = src_length - pos;
+    }
+
+    // Copy the substring from src to dest
+    for (size_t i = 0; i < len; ++i) {
+        dest[i] = src[pos + i];
+    }
+
+    // Null-terminate the destination string
+    dest[len] = '\0';
+}
+
+
+
+// Compares str to compare_str
+// 0 they are equal
+// <0 Either the value of the first character that does not match is lower in the compared string, or all compared characters match but the compared string is shorter.
+// Either the value of the first character that does not match is greater in the compared string, or all compared characters match but the compared string is longer.
+int compare(const char str[MAX_STRING_DISK_SIZE], const char compare_str[MAX_STRING_DISK_SIZE]) {
+    size_t len1 = length(str);
+    size_t len2 = length(compare_str);
+    size_t min_len = (len1 < len2) ? len1 : len2;
+
+    // Compare characters of both strings up to the length of the shorter string
+    for (size_t i = 0; i < min_len; ++i) {
+        if (str[i] != compare_str[i]) {
+            return (str[i] < compare_str[i]) ? -1 : 1;
+        }
+    }
+
+    // If all characters match, compare the lengths
+    if (len1 == len2) {
+        return 0;
+    } else {
+        return (len1 < len2) ? -1 : 1;
+    }
+}
+
+
+
+// Compares str to substring of compare_str
+// 0 they are equal
+// <0 Either the value of the first character that does not match is lower in the compared string, or all compared characters match but the compared string is shorter.
+// Either the value of the first character that does not match is greater in the compared string, or all compared characters match but the compared string is longer.
+int compare(const char str[MAX_STRING_DISK_SIZE], size_t compare_str_pos, size_t compare_str_len, const char compare_str[MAX_STRING_DISK_SIZE]) {
+    size_t str_len = length(str);
+    size_t compare_str_length = length(compare_str);
+
+    // Ensure compare_str_pos is within the length of compare_str
+    assert(compare_str_pos <= compare_str_length);
+
+    // Adjust compare_str_len if it exceeds the length of compare_str from compare_str_pos
+    if (compare_str_pos + compare_str_len > compare_str_length) {
+        compare_str_len = compare_str_length - compare_str_pos;
+    }
+
+    size_t min_len = (str_len < compare_str_len) ? str_len : compare_str_len;
+
+    // Compare characters of str and the substring of compare_str
+    for (size_t i = 0; i < min_len; ++i) {
+        if (str[i] != compare_str[compare_str_pos + i]) {
+            return (str[i] < compare_str[compare_str_pos + i]) ? -1 : 1;
+        }
+    }
+
+    // If all characters match, compare the lengths
+    if (str_len == compare_str_len) {
+        return 0;
+    } else {
+        return (str_len < compare_str_len) ? -1 : 1;
     }
 }
