@@ -1,4 +1,5 @@
 ## Implementing String functions in Metal for use on GPU
+This is the C++ String class functions implemented in Metal (MSL).
 
 ### Definitions:
 
@@ -121,5 +122,6 @@
 
 ```int compare(const char str[], size_t compare_str_pos, size_t compare_str_len, const char compare_str[])``` 
 
-### Reference  
-https://cplusplus.com/reference/string/string/
+### References  
+https://cplusplus.com/reference/string/string/  
+https://developer.apple.com/metal/
