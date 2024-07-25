@@ -29,7 +29,17 @@ void assign(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE
 void assign(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE], size_t subpos, size_t sublen);  
 void assign(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE], size_t sublen);  
 void assign(char str[MAX_STRING_DISK_SIZE], size_t n, char c);  
-
+void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, const char src[MAX_STRING_DISK_SIZE]);  
+void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, const char src[MAX_STRING_DISK_SIZE], size_t subpos, size_t sublen);  
+void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, const char src[MAX_STRING_DISK_SIZE], size_t sublen);  
+void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t n, const char src[MAX_STRING_DISK_SIZE], size_t sublen);  
+void erase(char str[MAX_STRING_DISK_SIZE], size_t pos, size_t len);  
+void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, const char src[MAX_STRING_DISK_SIZE]);  
+void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, const char src[MAX_STRING_DISK_SIZE], size_t subpos, size_t sublen);  
+void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, const char src[MAX_STRING_DISK_SIZE], size_t sublen);  
+void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, char c);  
+void swap(char swap1[MAX_STRING_DISK_SIZE], char swap2[MAX_STRING_DISK_SIZE]);  
+void pop_back(char str[MAX_STRING_DISK_SIZE]);  
 
 ### Reference  
 https://cplusplus.com/reference/string/string/

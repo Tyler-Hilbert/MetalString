@@ -6,7 +6,7 @@
 #define MAX_STRING_SIZE 100
 #define MAX_STRING_DISK_SIZE (MAX_STRING_SIZE + 1) // For null terminator
 
-constant size_t npos = -1;
+constant size_t NPOS = -1;
 
 using namespace metal;
 
@@ -33,17 +33,27 @@ char back(const char str[MAX_STRING_DISK_SIZE]);
 char front(const char str[MAX_STRING_DISK_SIZE]);
 
 //// To implement       string& operator+= (const string& str); string& operator+= (const char* s); string& operator+= (char c); string& operator+= (initializer_list<char> il);
-void append(char first[MAX_STRING_DISK_SIZE], const char second[MAX_STRING_DISK_SIZE]);
+void append(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE]);
 void push_back(char str[MAX_STRING_DISK_SIZE], char c);
 void assign(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE]);
 void assign(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE], size_t subpos, size_t sublen);
 void assign(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE], size_t sublen);
 void assign(char str[MAX_STRING_DISK_SIZE], size_t n, char c);
+void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, const char src[MAX_STRING_DISK_SIZE]);
+void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, const char src[MAX_STRING_DISK_SIZE], size_t subpos, size_t sublen);
+void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, const char src[MAX_STRING_DISK_SIZE], size_t sublen);
+void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t n, const char src[MAX_STRING_DISK_SIZE], size_t sublen);
+void erase(char str[MAX_STRING_DISK_SIZE], size_t pos, size_t len);
+void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, const char src[MAX_STRING_DISK_SIZE]);
+void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, const char src[MAX_STRING_DISK_SIZE], size_t subpos, size_t sublen);
+void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, const char src[MAX_STRING_DISK_SIZE], size_t sublen);
+void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, char c);
+void swap(char swap1[MAX_STRING_DISK_SIZE], char swap2[MAX_STRING_DISK_SIZE]);
+void pop_back(char str[MAX_STRING_DISK_SIZE]);
 
 
 
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Convert string to int
 int stoi(const char str[MAX_STRING_DISK_SIZE]) {
     int res = 0; // Initialize result
@@ -130,6 +140,7 @@ float stof(const char str[MAX_STRING_DISK_SIZE]) {
     // Return result with sign
     return sign * res;
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -156,6 +167,7 @@ size_t size(const char str[MAX_STRING_DISK_SIZE]) {
 size_t max_size(const char str[MAX_STRING_DISK_SIZE]) {
     return MAX_STRING_SIZE;
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -172,6 +184,7 @@ void clear(char str[MAX_STRING_DISK_SIZE]) {
 bool empty(const char str[MAX_STRING_DISK_SIZE]) {
     return str[0] == '\0';
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -208,17 +221,18 @@ char front(const char str[MAX_STRING_DISK_SIZE]) {
 
 
 
-// Function to append one string to another
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Note C++ has different: string& append (const string& str); string& append (const string& str, size_t subpos, size_t sublen = npos); string& append (const char* s); string& append (const char* s, size_t n); string& append (size_t n, char c); template <class InputIterator>   string& append (InputIterator first, InputIterator last); string& append (initializer_list<char> il);
-void append(char first[MAX_STRING_DISK_SIZE], const char second[MAX_STRING_DISK_SIZE]) {
-    size_t first_length = length(first);
-    size_t second_length = length(second);
-    assert(first_length + second_length < MAX_STRING_DISK_SIZE); // Ensure enough space
+// Function to append one string to another
+void append(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE]) {
+    size_t dest_length = length(dest);
+    size_t src_length = length(src);
+    assert(dest_length + src_length < MAX_STRING_DISK_SIZE); // Ensure enough space
 
-    for (size_t i = 0; i < second_length; ++i) {
-        first[first_length + i] = second[i];
+    for (size_t i = 0; i < src_length; ++i) {
+        dest[dest_length + i] = dest[i];
     }
-    first[first_length + second_length] = '\0';
+    dest[dest_length + src_length] = '\0';
 }
 
 
@@ -248,7 +262,7 @@ void assign(char dest[MAX_STRING_DISK_SIZE], const char src[MAX_STRING_DISK_SIZE
     size_t src_length = length(src);
     assert(subpos <= src_length); // Ensure subpos is within the source string
 
-    if (sublen == npos || subpos + sublen > src_length) { // TODO -- verify npos is correct
+    if (sublen == NPOS || subpos + sublen > src_length) { // TODO -- verify npos is correct
         sublen = src_length - subpos; // Adjust sublen if it exceeds the source string length
     }
 
@@ -285,4 +299,269 @@ void assign(char str[MAX_STRING_DISK_SIZE], size_t n, char c) {
         str[i] = c;
     }
     str[n] = '\0'; // Add null terminator
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+// Note C++ has different:string& insert (size_t pos, const string& str); string& insert (size_t pos, const string& str, size_t subpos, size_t sublen = npos); string& insert (size_t pos, const char* s); string& insert (size_t pos, const char* s, size_t n); string& insert (size_t pos,   size_t n, char c);iterator insert (const_iterator p, size_t n, char c); iterator insert (const_iterator p, char c); template <class InputIterator>iterator insert (iterator p, InputIterator first, InputIterator last); string& insert (const_iterator p, initializer_list<char> il);
+
+// Inserts a copy of src into dest at position pos
+void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, const char src[MAX_STRING_DISK_SIZE]) {
+    size_t dest_length = length(dest);
+    size_t src_length = length(src);
+    assert(pos <= dest_length); // Ensure pos is within the destination string
+    assert(dest_length + src_length < MAX_STRING_DISK_SIZE); // Ensure the combined length fits in the destination
+
+    // Move the part of dest after pos to make room for src
+    for (size_t i = dest_length; i >= pos; --i) {
+        dest[i + src_length] = dest[i];
+    }
+
+    // Copy src into dest at position pos
+    for (size_t i = 0; i < src_length; ++i) {
+        dest[pos + i] = src[i];
+    }
+
+    // Ensure the destination string is null-terminated
+    dest[dest_length + src_length] = '\0';
+}
+
+
+// Inserts a copy of the substring of src into dest at position pos
+void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, const char src[MAX_STRING_DISK_SIZE], size_t subpos, size_t sublen) {
+    size_t dest_length = length(dest);
+    size_t src_length = length(src);
+    assert(subpos <= src_length); // Ensure subpos is within the source string
+    assert(pos <= dest_length); // Ensure pos is within the destination string
+
+    // Adjust sublen if it exceeds the length of src or if it is NPOS
+    if (sublen == NPOS || subpos + sublen > src_length) {
+        sublen = src_length - subpos;
+    }
+
+    assert(dest_length + sublen < MAX_STRING_DISK_SIZE); // Ensure the combined length fits in the destination
+
+    // Move the part of dest after pos to make room for the substring
+    for (size_t i = dest_length; i >= pos; --i) {
+        dest[i + sublen] = dest[i];
+    }
+
+    // Copy the substring from src into dest at position pos
+    for (size_t i = 0; i < sublen; ++i) {
+        dest[pos + i] = src[subpos + i];
+    }
+
+    // Ensure the destination string is null-terminated
+    dest[dest_length + sublen] = '\0';
+}
+
+
+
+// Inserts a copy of the first n characters of src into dest at pos.
+void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, const char src[MAX_STRING_DISK_SIZE], size_t sublen) {
+    size_t dest_length = length(dest);
+    size_t src_length = length(src);
+    assert(pos <= dest_length); // Ensure pos is within the destination string
+    assert(sublen <= src_length); // Ensure sublen is within the source string
+
+    assert(dest_length + sublen < MAX_STRING_DISK_SIZE); // Ensure the combined length fits in the destination
+
+    // Move the part of dest after pos to make room for the substring
+    for (size_t i = dest_length; i >= pos; --i) {
+        dest[i + sublen] = dest[i];
+    }
+
+    // Copy the substring from src into dest at position pos
+    for (size_t i = 0; i < sublen; ++i) {
+        dest[pos + i] = src[i];
+    }
+
+    // Ensure the destination string is null-terminated
+    dest[dest_length + sublen] = '\0';
+}
+
+
+
+// Inserts n copies of c into dest starting at pos
+void insert(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t n, char c) {
+    size_t dest_length = length(dest);
+    assert(pos <= dest_length); // Ensure pos is within the destination string
+    assert(dest_length + n < MAX_STRING_DISK_SIZE); // Ensure the combined length fits in the destination
+
+    // Move the part of dest after pos to make room for n copies of c
+    for (size_t i = dest_length; i >= pos; --i) {
+        dest[i + n] = dest[i];
+    }
+
+    // Insert n copies of c into dest at position pos
+    for (size_t i = 0; i < n; ++i) {
+        dest[pos + i] = c;
+    }
+
+    // Ensure the destination string is null-terminated
+    dest[dest_length + n] = '\0';
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+// Erases len characters starting at pos from str
+// Note C++ uses default values
+void erase(char str[MAX_STRING_DISK_SIZE], size_t pos, size_t len) {
+    size_t str_length = length(str);
+    assert(pos <= str_length); // Ensure pos is within the string
+
+    // Adjust len if it exceeds the length of the string or if it is NPOS
+    if (len == NPOS || pos + len > str_length) {
+        len = str_length - pos;
+    }
+
+    // Move the part of the string after pos + len to pos
+    for (size_t i = pos; i < str_length - len; ++i) {
+        str[i] = str[i + len];
+    }
+
+    // Null-terminate the string at the new length
+    for (size_t i = str_length - len; i < str_length; ++i) {
+        str[i] = '\0';
+    }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Note: check reference for a couple replaces that are missing.
+
+
+// Replace len characters starting at pos with the string src
+void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, const char src[MAX_STRING_DISK_SIZE]) {
+    size_t dest_length = length(dest);
+    size_t src_length = length(src);
+    assert(pos <= dest_length); // Ensure pos is within the string
+    assert(pos + len <= src_length); // Ensure the replacement doesn't exceed src
+
+    // Adjust len if it exceeds the length of the destination string
+    if (len == NPOS || pos + len > dest_length) {
+        len = dest_length - pos;
+    }
+
+    // Replace characters in dest with characters from src
+    for (size_t i = 0; i < len; ++i) {
+        dest[pos + i] = src[pos + i];
+    }
+}
+
+
+// Copies the portion of src that begins at the character position subpos and spans sublen characters (or until the end of str, if either str is too short or if sublen is string::npos).
+void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, const char src[MAX_STRING_DISK_SIZE], size_t subpos, size_t sublen) {
+    size_t dest_length = length(dest);
+    size_t src_length = length(src);
+    assert(pos <= dest_length); // Ensure pos is within the string
+    assert(subpos <= src_length); // Ensure subpos is within the source string
+
+    // Adjust sublen if it exceeds the length of src or if it is NPOS
+    if (sublen == NPOS || subpos + sublen > src_length) {
+        sublen = src_length - subpos;
+    }
+
+    // Adjust len if it exceeds the length of the destination string
+    if (len == NPOS || pos + len > dest_length) {
+        len = dest_length - pos;
+    }
+
+    // Replace characters in dest with characters from src
+    for (size_t i = 0; i < sublen && i < len; ++i) {
+        dest[pos + i] = src[subpos + i];
+    }
+
+    // Ensure the destination string is null-terminated if needed
+    if (pos + sublen < dest_length) {
+        dest[pos + sublen] = '\0';
+    }
+}
+
+
+
+// Copies first len or sublen characters from first index of src into dest
+void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, const char src[MAX_STRING_DISK_SIZE], size_t sublen) {
+    size_t dest_length = length(dest);
+    size_t src_length = length(src);
+    assert(pos <= dest_length); // Ensure pos is within the string
+
+    // Adjust sublen if it exceeds the length of src or if it is NPOS
+    if (sublen == NPOS || sublen > src_length) {
+        sublen = src_length;
+    }
+
+    // Adjust len if it exceeds the length of the destination string
+    if (len == NPOS || pos + len > dest_length) {
+        len = dest_length - pos;
+    }
+
+    // Replace characters in dest with characters from src
+    for (size_t i = 0; i < sublen && i < len; ++i) {
+        dest[pos + i] = src[i];
+    }
+
+    // Ensure the destination string is null-terminated if needed
+    if (pos + sublen < dest_length) {
+        dest[pos + sublen] = '\0';
+    }
+}
+
+
+
+// Replaces the portion of the str by n consecutive copies of character c.
+void replace(char dest[MAX_STRING_DISK_SIZE], size_t pos, size_t len, char c) {
+    size_t dest_length = length(dest);
+    assert(pos <= dest_length); // Ensure pos is within the string
+
+    // Adjust len if it exceeds the length of the destination string
+    if (len == NPOS || pos + len > dest_length) {
+        len = dest_length - pos;
+    }
+
+    // Replace characters in dest with n copies of character c
+    for (size_t i = 0; i < len; ++i) {
+        dest[pos + i] = c;
+    }
+
+    // Ensure the destination string is null-terminated if needed
+    if (pos + len < dest_length) {
+        dest[pos + len] = '\0';
+    }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Swaps the character arrays
+void swap(char swap1[MAX_STRING_DISK_SIZE], char swap2[MAX_STRING_DISK_SIZE]) {
+    char temp[MAX_STRING_DISK_SIZE];
+
+    // Copy swap1 to temp
+    for (size_t i = 0; i < MAX_STRING_DISK_SIZE; ++i) {
+        temp[i] = swap1[i];
+    }
+
+    // Copy swap2 to swap1
+    for (size_t i = 0; i < MAX_STRING_DISK_SIZE; ++i) {
+        swap1[i] = swap2[i];
+    }
+
+    // Copy temp to swap2
+    for (size_t i = 0; i < MAX_STRING_DISK_SIZE; ++i) {
+        swap2[i] = temp[i];
+    }
+}
+
+
+
+// Erases the last character of str
+void pop_back(char str[MAX_STRING_DISK_SIZE]) {
+    size_t len = length(str);
+    if (len > 0) {
+        str[len - 1] = '\0'; // Remove the last character by setting it to null terminator
+    }
 }
