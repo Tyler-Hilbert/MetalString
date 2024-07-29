@@ -1,7 +1,7 @@
-## Implementing String functions in Metal for use on GPU
-This is the C++ String class functions implemented in Metal (MSL).
+# Implementing String in Metal for use on GPU
+The C++ String class implemented in Metal (MSL).
 
-### Definitions:
+## Definitions:
 
 #### Type Conversion:
 ```int stoi(const char str[])```  
@@ -122,6 +122,30 @@ This is the C++ String class functions implemented in Metal (MSL).
 
 ```int compare(const char str[], size_t compare_str_pos, size_t compare_str_len, const char compare_str[])``` 
 
-### References  
+## Performance
+
+| string len | substr len | find runtime |
+|------------|------------|--------------|
+| 5          | 1          | 0.9181 ms    |
+| 10         | 1          | 1.2051 ms    |
+| 10         | 5          | 1.2539 ms    |
+| 25         | 1          | 1.1419 ms    |
+| 25         | 5          | 1.0914 ms    |
+| 25         | 10         | 1.1402 ms    |
+| 50         | 1          | 1.1923 ms    |
+| 50         | 5          | 2.3409 ms    |
+| 50         | 10         | 1.7257 ms    |
+| 50         | 25         | 4.1751 ms    |
+| 100        | 1          | 1.5150 ms    |
+| 100        | 5          | 1.8975 ms    |
+| 100        | 10         | 2.3663 ms    |
+| 100        | 25         | 2.9884 ms    |
+| 100        | 50         | 3.2206 ms    |
+
+(averaged for 10 runs where substr wasn't in string)  
+
+
+
+## References  
 https://cplusplus.com/reference/string/string/  
 https://developer.apple.com/metal/
