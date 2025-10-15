@@ -1,6 +1,9 @@
 # Implementing String in Metal for use on GPU
 The C++ String class implemented in Metal (MSL).
 
+## Note
+The behavior may be slightly different than the original C++ string class.
+
 ## Definitions:
 
 #### Type Conversion:
@@ -121,9 +124,6 @@ The C++ String class implemented in Metal (MSL).
 ```int compare(const char str[], const char compare_str[])```  
 
 ```int compare(const char str[], size_t compare_str_pos, size_t compare_str_len, const char compare_str[])``` 
-
-## Note
-The behavior may be slightly different than the original C++ string class.
 
 ## References  
 https://cplusplus.com/reference/string/string/  
