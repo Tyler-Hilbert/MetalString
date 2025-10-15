@@ -122,49 +122,8 @@ The C++ String class implemented in Metal (MSL).
 
 ```int compare(const char str[], size_t compare_str_pos, size_t compare_str_len, const char compare_str[])``` 
 
-## Performance
-
-### Find
-| string len | substr len | find runtime |
-|------------|------------|--------------|
-| 5          | 1          | 0.797 ms     |
-| 10         | 1          | 0.806 ms     |
-| 10         | 5          | 0.832 ms     |
-| 25         | 1          | 0.846 ms     |
-| 25         | 5          | 0.834 ms     |
-| 25         | 10         | 0.831 ms     |
-| 50         | 1          | 0.861 ms     |
-| 50         | 5          | 0.869 ms     |
-| 50         | 10         | 0.867 ms     |
-| 50         | 25         | 0.878 ms     |
-| 100        | 1          | 0.926 ms     |
-| 100        | 5          | 0.933 ms     |
-| 100        | 10         | 0.940 ms     |
-| 100        | 25         | 0.945 ms     |
-| 100        | 50         | 0.954 ms     |
-
-(averaged for 1,000 runs where substr wasn't in string)  
-
-### Replace
-| string len | substr len | replace runtime |
-|------------|------------|--------------|
-| 5          | 1          | 0.819 ms     |
-| 10         | 1          | 0.835 ms     |
-| 10         | 5          | 0.846 ms     |
-| 25         | 1          | 0.848 ms     |
-| 25         | 5          | 0.853 ms     |
-| 25         | 10         | 0.853 ms     |
-| 50         | 1          | 0.864 ms     |
-| 50         | 5          | 0.871 ms     |
-| 50         | 10         | 0.915 ms     |
-| 50         | 25         | 0.905 ms     |
-| 100        | 1          | 0.919 ms     |
-| 100        | 5          | 0.930 ms     |
-| 100        | 10         | 0.934 ms     |
-| 100        | 25         | 0.958 ms     |
-| 100        | 50         | 0.978 ms     |
-
-(averaged for 1,000 runs)  
+## Note
+The behavior may be slightly different than the original C++ string class.
 
 ## References  
 https://cplusplus.com/reference/string/string/  
